@@ -7,12 +7,13 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <WebKit/WebKit.h>
 
-@interface EasyJSWebViewProxyDelegate : NSObject<UIWebViewDelegate>
+@interface EasyJSWebViewProxyDelegate : NSObject<WKNavigationDelegate>
 
-@property (nonatomic, retain) NSMutableDictionary* javascriptInterfaces;
-@property (nonatomic, retain) id<UIWebViewDelegate> realDelegate;
+@property (nonatomic, strong) NSMutableDictionary *javascriptInterfaces;
+@property (nonatomic, retain) id<WKNavigationDelegate> realDelegate;
 
-- (void) addJavascriptInterfaces:(NSObject*) interface WithName:(NSString*) name;
+- (void)addJavascriptInterfaces:(NSObject *)interface WithName:(NSString *)name;
 
 @end

@@ -14,7 +14,7 @@
 @synthesize webView;
 @synthesize removeAfterExecute;
 
-- (id) initWithWebView:(EasyJSWebView *)_webView{
+- (id)initWithWebView:(EasyJSWebView *)_webView {
 	self = [super init];
     if (self) {
 		self.webView = _webView;
@@ -22,35 +22,34 @@
     return self;
 }
 
-- (NSString*) execute{
-	return [self executeWithParams:nil];
+- (void)executeWithParam:(NSString *)param completionHandler:(void (^)(id obj, NSError *error))completionHandler {
+	NSMutableArray *params = [[NSMutableArray alloc] initWithObjects:param, nil];
+    [self executeWithParams:params completionHandler:completionHandler];
 }
 
-- (NSString*) executeWithParam: (NSString*) param{
-	NSMutableArray* params = [[NSMutableArray alloc] initWithObjects:param, nil];
-	return [self executeWithParams:params];
-}
-
-- (NSString*) executeWithParams: (NSArray*) params{
+- (void)executeWithParams:(NSArray*)params completionHandler:(void (^)(id obj, NSError *error))completionHandler {
 	NSMutableString* injection = [[NSMutableString alloc] init];
-	
 	[injection appendFormat:@"EasyJS.invokeCallback(\"%@\", %@", self.funcID, self.removeAfterExecute ? @"true" : @"false"];
-	
 	if (params){
-		for (int i = 0, l = params.count; i < l; i++){
+		for (NSInteger i = 0, l = params.count; i < l; i++){
 			NSString* arg = [params objectAtIndex:i];
 			NSString* encodedArg = (NSString*) CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)arg, NULL, (CFStringRef) @"!*'();:@&=+$,/?%#[]", kCFStringEncodingUTF8);
-			
 			[injection appendFormat:@", \"%@\"", encodedArg];
 		}
 	}
-	
 	[injection appendString:@");"];
 	
 	if (self.webView){
-		return [self.webView stringByEvaluatingJavaScriptFromString:injection];
-	}else{
-		return nil;
+        [self.webView evaluateJavaScript:injection completionHandler:^(id obj, NSError * _Nullable error) {
+            if (completionHandler) {
+                completionHandler(obj, error);
+            }
+        }];
+	} else {
+        NSError *error = [NSError errorWithDomain:@"webView = nil" code:-1 userInfo:nil];
+        if (completionHandler) {
+            completionHandler(nil, error);
+        }
 	}
 }
 

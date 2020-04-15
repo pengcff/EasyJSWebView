@@ -11,14 +11,13 @@
 
 @interface EasyJSDataFunction : NSObject
 
-@property (nonatomic, retain) NSString* funcID;
-@property (nonatomic, retain) EasyJSWebView* webView;
+@property (nonatomic, strong) NSString *funcID;
+@property (nonatomic, strong) EasyJSWebView *webView;
 @property (nonatomic, assign) BOOL removeAfterExecute;
 
-- (id) initWithWebView: (EasyJSWebView*) _webView;
+- (id)initWithWebView:(EasyJSWebView *)_webView;
 
-- (NSString*) execute;
-- (NSString*) executeWithParam: (NSString*) param;
-- (NSString*) executeWithParams: (NSArray*) params;
+- (void)executeWithParam:(NSString *)param completionHandler:(void (^)(id obj, NSError *error))completionHandler;
+- (void)executeWithParams:(NSArray*)params completionHandler:(void (^)(id obj, NSError *error))completionHandler;
 
 @end

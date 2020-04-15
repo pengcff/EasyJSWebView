@@ -6,15 +6,15 @@
 //  Copyright (c) 2013 Dukeland. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import <WebKit/WebKit.h>
 #import "EasyJSWebViewProxyDelegate.h"
 
-@interface EasyJSWebView : UIWebView
+@interface EasyJSWebView : WKWebView
 
 // All the events will pass through this proxy delegate first
-@property (nonatomic, retain) EasyJSWebViewProxyDelegate* proxyDelegate;
+@property (nonatomic, strong) EasyJSWebViewProxyDelegate* proxyDelegate;
 
-- (void) initEasyJS;
-- (void) addJavascriptInterfaces:(NSObject*) interface WithName:(NSString*) name;
+- (void)initEasyJS;
+- (void)addJavascriptInterfaces:(NSObject*)interface WithName:(NSString*)name;
 
 @end
